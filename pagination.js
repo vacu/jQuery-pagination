@@ -4,9 +4,12 @@
       'itemsPerPage': 1,
       'items': 'div.item',
       'navigationHTML': '',
+      'navigationItem': '',
       'navigationContainer': '.navigation',
       'currentPage': '#currentPage',
-      'showPerPage': '#showPerPage'
+      'showPerPage': '#showPerPage',
+      'nextPage': '#nextPage',
+      'prevPage': '#prevPage'
     });
 
     var options = $.extend(settings, options);
@@ -30,7 +33,10 @@
 
       // navigation html
       while (pages > page) {
-        o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + page + '</a>';
+        if (o.navigationItem == '')
+          o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + page + '</a>';
+        else
+          o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + o.navigationItem + '</a>';
         page++;
       }
 
@@ -44,6 +50,14 @@
         });
       });
 
+      $(o.nextPage).on('click', function() {
+        goNext(container);
+      });
+
+      $(o.prevPage).on('click', function() {
+        goPrev(container);
+      });
+
       function goToPage(page, container) {
         var showPerPage = parseInt($(o.showPerPage).val());
         var startFrom = page * showPerPage;
@@ -53,14 +67,14 @@
         $(o.currentPage).val(page);
       }
 
-      function goPrev() {
+      function goPrev(container) {
         var navPage = parseInt($(o.currentPage).val()) - 1;
-        goToPage(navPage);
+        goToPage(navPage, container);
       }
 
-      function goNext() {
+      function goNext(container) {
         var navPage = parseInt($(o.currentPage).val()) + 1;
-        goToPage(navPage);
+        goToPage(navPage, container);
       }
     });
   }
