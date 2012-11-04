@@ -1,81 +1,126 @@
 (function($) {
-  $.fn.pagination = function(options) {
-    var settings = $.extend({
-      'itemsPerPage': 1,
-      'items': 'div.item',
-      'navigationHTML': '',
-      'navigationItem': '',
-      'navigationContainer': '.navigation',
-      'currentPage': '#currentPage',
-      'showPerPage': '#showPerPage',
-      'nextPage': '#nextPage',
-      'prevPage': '#prevPage'
-    });
+  var settings = {
+    'itemsPerPage': 1,
+    'items': 'div.item',
 
-    var options = $.extend(settings, options);
+    'navigationHTML': '',
+    'navigationItem': '',
+    'navigationContainer': '.navigation',
+    'pagesContainer': '',
+    'showPages': true,
 
-    return this.each(function() {
-      var o = options;
+    'currentPage': '',
+    'showPerPage': '',
+    'nextPage': '',
+    'prevPage': '',
 
-      var page = 0;
-      var item = 0;
-      var items = $(this).find(o.items);
-      var pages = Math.ceil(items.length / o.itemsPerPage);
-      var container = $(this);
+    'images': '',
+    'imgWidth': '100',
+    'imgHeight': '100'
+  };
 
-      items.each(function() {
-        $(this).attr('style', 'display: none');
-      });
+  var options = $.extend(settings, options);
 
-      items.attr('style', 'display: none').slice(0, o.itemsPerPage).attr('style', 'display: block');
-      $(o.currentPage).val(0);
-      $(o.showPerPage).val(o.itemsPerPage);
+  var methods = {
+    init: function (options) {
+      return this.each(function() {
+        var o = options;
+        var page = 0;
+        var item = 0;
+        var items = $(this).find(o.items);
+        var pages = Math.ceil(items.length / o.itemsPerPage);
+        var container = $(this);
 
-      // navigation html
-      while (pages > page) {
-        if (o.navigationItem == '')
-          o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + page + '</a>';
-        else
-          o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + o.navigationItem + '</a>';
-        page++;
-      }
+        o.navigationHTML = '';
 
-      // append navigation to container
-      $(o.navigationContainer).html(o.navigationHTML);
-      // end navigation html
+        items.each(function() {
+          $(this).attr('style', 'display: none');
+        });
 
-      $(o.navigationContainer).find('#page').each(function(key, val) {
-        $(val).on('click', function() {
-          goToPage($(this).attr('data-page'), container);
+        items.attr('style', 'display: none').slice(0, o.itemsPerPage).attr('style', 'display: block');
+        $(o.currentPage).val(0);
+        $(o.showPerPage).val(o.itemsPerPage);
+
+        // navigation html
+        while (pages > page) {
+          if (o.navigationItem == '' && o.images.length == 0) {
+            o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + page + '</a>';
+          }
+
+          if (o.images.length != 0) {
+            o.navigationHTML += '<a href="javascript:;" id="page" class="theImage" data-page="' + page + '">\n\
+                                <img src="/gallery_images/' + o.images[page] + '" width="' + o.imgWidth + '" height="' + o.imgHeight + '" alt="" />\n\
+                                </a>';
+
+            // console.log(o.navigationHTML);
+          }
+
+          if (o.navigationItem != '') {
+            o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + o.navigationItem + '</a>';
+          }
+
+          page++;
+        }
+
+        methods.writePageNumbering(o, pages);
+
+        // append navigation to container
+        $(o.navigationContainer).html(o.navigationHTML);
+        // end navigation html
+
+        $(o.navigationContainer).find('#page').each(function(key, val) {
+          $(val).on('click', function() {
+            methods.goToPage($(this).attr('data-page'), container, o);
+          });
+        });
+
+        $(o.nextPage).on('click', function() {
+          methods.goNext(container, o);
+          methods.writePageNumbering(o, pages);
+        });
+
+        $(o.prevPage).on('click', function() {
+          methods.goPrev(container, o);
+          methods.writePageNumbering(o, pages);
         });
       });
+    },
 
-      $(o.nextPage).on('click', function() {
-        goNext(container);
-      });
+    goToPage: function(page, container, o) {
+      var showPerPage = parseInt($(o.showPerPage).val());
+      var startFrom = page * showPerPage;
+      var endOn = startFrom + showPerPage;
 
-      $(o.prevPage).on('click', function() {
-        goPrev(container);
-      });
+      $(container).find(o.items).attr('style', 'display: none').slice(startFrom, endOn).attr('style', 'display: block');
+      $(o.currentPage).val(page);
+    },
 
-      function goToPage(page, container) {
-        var showPerPage = parseInt($(o.showPerPage).val());
-        var startFrom = page * showPerPage;
-        var endOn = startFrom + showPerPage;
+    goPrev: function(container, o) {
+      var navPage = parseInt($(o.currentPage).val()) - 1;
+      methods.goToPage(navPage, container, o);
+    },
 
-        $(container).find(o.items).attr('style', 'display: none').slice(startFrom, endOn).attr('style', 'display: block');
-        $(o.currentPage).val(page);
+    goNext: function(container, o) {
+      var navPage = parseInt($(o.currentPage).val()) + 1;
+      methods.goToPage(navPage, container, o);
+    },
+
+    writePageNumbering: function(o, pages) {
+      if (o.showPages !== 'false') {
+        if (typeof o.pagesContainer != 'undefined') {
+          $(o.pagesContainer).html(parseInt(parseInt($(o.currentPage).val()) + 1) + '/' + pages);
+        }
       }
+    }
+  };
 
-      function goPrev(container) {
-        var navPage = parseInt($(o.currentPage).val()) - 1;
-        goToPage(navPage, container);
-      }
-
-      function goNext(container) {
-        var navPage = parseInt($(o.currentPage).val()) + 1;
-        goToPage(navPage, container);
-      }
-    });
+  $.fn.pagination = function(method) {
+    if (methods[method]) {
+      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else if (typeof method === 'object' || !method) {
+      return methods.init.apply(this, arguments);
+    } else {
+      $.error('Method ' +  method + ' does not exist on jQuery.pagination');
+    }
   }
 })(jQuery);
