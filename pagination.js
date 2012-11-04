@@ -1,7 +1,6 @@
 (function($) {
   $.fn.pagination = function(options) {
     var settings = $.extend({
-      'container': '#container',
       'itemsPerPage': 1,
       'items': 'div.item',
       'navigationHTML': '',
