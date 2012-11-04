@@ -3,6 +3,16 @@
 Number of items that should be on the page
 ### items
 The item (as the html element of css selector)
+### navigationItem
+The navigation item if you don't want the page numbers
+### pagesContainer
+CSS selector if you want to see the pages (ex: 1/12)
+### showPages
+If true the pagesContainer should be specified else no pages will be shown
+### images
+If given the page numbers will be replaces with these images
+### imgWidth & imgHeight
+Width and height for the "images" (above)
 ### navigationContainer
 The element that should contain the HTML for navigation
 ### currentPage
@@ -20,9 +30,16 @@ Hidden input element css selector
   $(document).ready(function() {
     $('#container').pagination({
       itemsPerPage: 2,
+      navigationItem: '',
       navigationContainer: '.navigationContainer',
       currentPage: '#currentPage',
       showPerPage: '#showPerPage'
+      nextPage: '',
+      prevPage: '',
+      images: <?php echo json_encode($theImages) ?>,
+      showPages: false,
+      imgWidth: '50',
+      imgHeight: '50'
     });
   });
 </script>
