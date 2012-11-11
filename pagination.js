@@ -15,6 +15,7 @@
     'prevPage': '',
 
     'images': '',
+    'imagePath': '/gallery_images/',
     'imgWidth': '100',
     'imgHeight': '100'
   };
@@ -32,6 +33,9 @@
         var container = $(this);
 
         o.navigationHTML = '';
+        if (typeof o.imagePath == 'undefined') {
+          o.imagePath = '/gallery_images/';
+        }
 
         items.each(function() {
           $(this).attr('style', 'display: none');
@@ -43,16 +47,15 @@
 
         // navigation html
         while (pages > page) {
-          if (o.navigationItem == '' && o.images.length == 0) {
-            o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + page + '</a>';
+          if (o.navigationItem == '' && typeof o.images == 'undefined') {
+            o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + parseInt(page + 1) + '</a> /';
           }
 
-          if (o.images.length != 0) {
-            o.navigationHTML += '<a href="javascript:;" id="page" class="theImage" data-page="' + page + '">\n\
-                                <img src="/gallery_images/' + o.images[page] + '" width="' + o.imgWidth + '" height="' + o.imgHeight + '" alt="" />\n\
+          if (typeof o.images !== 'undefined') {
+            if (o.images.length != 0)
+              o.navigationHTML += '<a href="javascript:;" id="page" class="theImage" data-page="' + page + '">\n\
+                                <img src="' + o.imagePath + o.images[page] + '" width="' + o.imgWidth + '" height="' + o.imgHeight + '" alt="" />\n\
                                 </a>';
-
-            // console.log(o.navigationHTML);
           }
 
           if (o.navigationItem != '') {

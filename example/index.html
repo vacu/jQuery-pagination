@@ -5,9 +5,16 @@
   $(document).ready(function() {
     $('#container').pagination({
       itemsPerPage: 2,
+      navigationItem: '',
       navigationContainer: '.navigationContainer',
       currentPage: '#currentPage',
       showPerPage: '#showPerPage'
+      nextPage: '',
+      prevPage: '',
+      images: <?php echo json_encode($theImages) ?>,
+      showPages: false,
+      imgWidth: '50',
+      imgHeight: '50'
     });
   });
 </script>
