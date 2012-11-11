@@ -53,9 +53,10 @@
 
           if (typeof o.images !== 'undefined') {
             if (o.images.length != 0)
-              o.navigationHTML += '<a href="javascript:;" id="page" class="theImage" data-page="' + page + '">\n\
-                                <img src="' + o.imagePath + o.images[page] + '" width="' + o.imgWidth + '" height="' + o.imgHeight + '" alt="" />\n\
-                                </a>';
+              o.navigationHTML +=
+                '<a href="javascript:;" id="page" class="theImage" data-page="' + page + '">\n\
+                <img src="' + o.imagePath + o.images[page] + '" width="' + o.imgWidth + '" height="' + o.imgHeight + '" alt="" />\n\
+                </a>';
           }
 
           if (o.navigationItem != '') {
@@ -78,12 +79,12 @@
         });
 
         $(o.nextPage).on('click', function() {
-          methods.goNext(container, o);
+          methods.goNext(container, o, pages);
           methods.writePageNumbering(o, pages);
         });
 
         $(o.prevPage).on('click', function() {
-          methods.goPrev(container, o);
+          methods.goPrev(container, o, pages);
           methods.writePageNumbering(o, pages);
         });
       });
@@ -98,14 +99,16 @@
       $(o.currentPage).val(page);
     },
 
-    goPrev: function(container, o) {
+    goPrev: function(container, o, pages) {
       var navPage = parseInt($(o.currentPage).val()) - 1;
-      methods.goToPage(navPage, container, o);
+      if (navPage > pages)
+        methods.goToPage(navPage, container, o);
     },
 
-    goNext: function(container, o) {
+    goNext: function(container, o, pages) {
       var navPage = parseInt($(o.currentPage).val()) + 1;
-      methods.goToPage(navPage, container, o);
+      if (navPage < pages)
+        methods.goToPage(navPage, container, o);
     },
 
     writePageNumbering: function(o, pages) {
