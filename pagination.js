@@ -101,7 +101,7 @@
 
     goPrev: function(container, o, pages) {
       var navPage = parseInt($(o.currentPage).val()) - 1;
-      if (navPage > pages)
+      if (navPage >= 0)
         methods.goToPage(navPage, container, o);
     },
 
