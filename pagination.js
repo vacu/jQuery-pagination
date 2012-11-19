@@ -48,19 +48,33 @@
         // navigation html
         while (pages > page) {
           if (o.navigationItem == '' && typeof o.images == 'undefined') {
-            o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + parseInt(page + 1) + '</a> /';
+            if ($(o.currentPage).val() == page)
+              o.navigationHTML += '<a href="javascript:;" class="page active" id="page" data-page="' + page + '">' + parseInt(page + 1) + '</a> /';
+            else
+              o.navigationHTML += '<a href="javascript:;" class="page" id="page" data-page="' + page + '">' + parseInt(page + 1) + '</a> /';
           }
 
           if (typeof o.images !== 'undefined') {
-            if (o.images.length != 0)
-              o.navigationHTML +=
-                '<a href="javascript:;" id="page" class="theImage" data-page="' + page + '">\n\
+            if (o.images.length != 0) {
+              if ($(o.currentPage).val() == page) {
+                o.navigationHTML +=
+                '<a href="javascript:;" id="page" style="border: 1px solid #000; width: 176px; height: 115px;" class="page theImage active" data-page="' + page + '">\n\
                 <img src="' + o.imagePath + o.images[page] + '" width="' + o.imgWidth + '" height="' + o.imgHeight + '" alt="" />\n\
                 </a>';
+              } else {
+                o.navigationHTML +=
+                '<a href="javascript:;" id="page" class="page theImage" data-page="' + page + '">\n\
+                <img src="' + o.imagePath + o.images[page] + '" width="' + o.imgWidth + '" height="' + o.imgHeight + '" alt="" />\n\
+                </a>';
+              }
+            }
           }
 
           if (o.navigationItem != '') {
-            o.navigationHTML += '<a href="javascript:;" id="page" data-page="' + page + '">' + o.navigationItem + '</a>';
+            if ($(o.currentPage).val() == page)
+              o.navigationHTML += '<a href="javascript:;" class="page active" id="page" data-page="' + page + '">' + o.navigationItem + '</a>';
+            else
+              o.navigationHTML += '<a href="javascript:;" class="page" id="page" data-page="' + page + '">' + o.navigationItem + '</a>';
           }
 
           page++;
@@ -69,25 +83,53 @@
         methods.writePageNumbering(o, pages);
 
         // append navigation to container
-        $(o.navigationContainer).html(o.navigationHTML);
+        if (page > 1)
+          $(o.navigationContainer).html(o.navigationHTML);
         // end navigation html
 
-        $(o.navigationContainer).find('#page').each(function(key, val) {
+        $(o.navigationContainer).find('.page').each(function(key, val) {
           $(val).on('click', function() {
             methods.goToPage($(this).attr('data-page'), container, o);
+
+            methods.changeClass($(this), o);
           });
         });
 
         $(o.nextPage).on('click', function() {
           methods.goNext(container, o, pages);
+          $(o.navigationContainer).find('.page').each(function(key, val) {
+            methods.changeClass($(this), o);
+          });
           methods.writePageNumbering(o, pages);
         });
 
         $(o.prevPage).on('click', function() {
           methods.goPrev(container, o, pages);
+          $(o.navigationContainer).find('.page').each(function(key, val) {
+            methods.changeClass($(this), o);
+          });
           methods.writePageNumbering(o, pages);
         });
       });
+    },
+
+    changeClass: function(page, o) {
+      console.log(page.attr('data-page'))
+      if ($(o.currentPage).val() == page.attr('data-page')) {
+        if (typeof o.images == 'undefined' || o.images == '') {
+          $(o.navigationContainer).find('.page.active').each(function() {
+            $(this).attr('class', 'page');
+          });
+
+          page.attr('class', 'page active');
+        } else {
+          $(o.navigationContainer).find('.page.active').each(function() {
+            $(this).attr('class', 'page theImage');
+          });
+
+          page.attr('class', 'page theImage active');
+        }
+      }
     },
 
     goToPage: function(page, container, o) {
@@ -114,7 +156,7 @@
     writePageNumbering: function(o, pages) {
       if (o.showPages !== 'false') {
         if (typeof o.pagesContainer != 'undefined') {
-          $(o.pagesContainer).html(parseInt(parseInt($(o.currentPage).val()) + 1) + '/' + pages);
+          $(o.pagesContainer).html('<span class="pagination pagesCurrent">' + parseInt(parseInt($(o.currentPage).val()) + 1) + '</span>' + '/' + pages);
         }
       }
     }
