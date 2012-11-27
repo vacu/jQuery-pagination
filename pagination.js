@@ -1,23 +1,23 @@
 (function($) {
   var settings = {
-    'itemsPerPage': 1,
-    'items': 'div.item',
+    itemsPerPage: 1,
+    items: 'div.item',
 
-    'navigationHTML': '',
-    'navigationItem': '',
-    'navigationContainer': '.navigation',
-    'pagesContainer': '',
-    'showPages': true,
+    navigationHTML: '',
+    navigationItem: '',
+    navigationContainer: '.navigation',
+    pagesContainer: '',
+    showPages: true,
 
-    'currentPage': '',
-    'showPerPage': '',
-    'nextPage': '',
-    'prevPage': '',
+    currentPage: '',
+    showPerPage: '',
+    nextPage: '',
+    prevPage: '',
 
-    'images': '',
-    'imagePath': '/gallery_images/',
-    'imgWidth': '100',
-    'imgHeight': '100'
+    images: '',
+    imagePath: '/gallery_images/',
+    imgWidth: '100',
+    imgHeight: '100'
   };
 
   var options = $.extend(settings, options);
@@ -47,18 +47,19 @@
 
         // navigation html
         while (pages > page) {
-          if (o.navigationItem == '' && typeof o.images == 'undefined') {
-            if ($(o.currentPage).val() == page)
+          if (typeof o.navigationItem == 'undefined' && typeof o.images == 'undefined') {
+            if ($(o.currentPage).val() == page) {
               o.navigationHTML += '<a href="javascript:;" class="page active" id="page" data-page="' + page + '">' + parseInt(page + 1) + '</a> /';
-            else
+            } else {
               o.navigationHTML += '<a href="javascript:;" class="page" id="page" data-page="' + page + '">' + parseInt(page + 1) + '</a> /';
+            }
           }
 
-          if (typeof o.images !== 'undefined') {
+          if (typeof o.images != 'undefined') {
             if (o.images.length != 0) {
               if ($(o.currentPage).val() == page) {
                 o.navigationHTML +=
-                '<a href="javascript:;" id="page" style="border: 1px solid #000; width: 176px; height: 115px;" class="page theImage active" data-page="' + page + '">\n\
+                '<a href="javascript:;" id="page" class="page theImage active" data-page="' + page + '">\n\
                 <img src="' + o.imagePath + o.images[page] + '" width="' + o.imgWidth + '" height="' + o.imgHeight + '" alt="" />\n\
                 </a>';
               } else {
@@ -70,7 +71,7 @@
             }
           }
 
-          if (o.navigationItem != '') {
+          if (typeof o.navigationItem != 'undefined') {
             if ($(o.currentPage).val() == page)
               o.navigationHTML += '<a href="javascript:;" class="page active" id="page" data-page="' + page + '">' + o.navigationItem + '</a>';
             else
@@ -114,7 +115,6 @@
     },
 
     changeClass: function(page, o) {
-      console.log(page.attr('data-page'))
       if ($(o.currentPage).val() == page.attr('data-page')) {
         if (typeof o.images == 'undefined' || o.images == '') {
           $(o.navigationContainer).find('.page.active').each(function() {
