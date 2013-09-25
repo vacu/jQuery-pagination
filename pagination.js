@@ -25,12 +25,12 @@
   var methods = {
     init: function (options) {
       return this.each(function() {
-        var o = options;
-        var page = 0;
-        var item = 0;
-        var items = $(this).find(o.items);
-        var pages = Math.ceil(items.length / o.itemsPerPage);
-        var container = $(this);
+        var o         = options
+          , page      = 0
+          , item      = 0
+          , items     = $(this).find(o.items)
+          , pages     = Math.ceil(items.length / o.itemsPerPage)
+          , container = $(this);
 
         o.navigationHTML = '';
         if (typeof o.imagePath == 'undefined') {
@@ -45,14 +45,14 @@
         $(o.currentPage).val(0);
         $(o.showPerPage).val(o.itemsPerPage);
 
+        o.navigationHTML += o.prevPage;
         // navigation html
         while (pages > page) {
-          if (typeof o.navigationItem == 'undefined' && typeof o.images == 'undefined') {
-            if ($(o.currentPage).val() == page) {
-              o.navigationHTML += '<a href="javascript:;" class="page active" id="page" data-page="' + page + '">' + parseInt(page + 1) + '</a> /';
-            } else {
-              o.navigationHTML += '<a href="javascript:;" class="page" id="page" data-page="' + page + '">' + parseInt(page + 1) + '</a> /';
-            }
+          if (o.navigationItem == '' && typeof o.images == 'undefined') {
+            if ($(o.currentPage).val() == page)
+              o.navigationHTML += '<li class="active"><a href="javascript:;" class="page active" id="page" data-page="' + page + '">' + parseInt(page+1) + '</a></li>';
+            else
+              o.navigationHTML += '<li><a href="javascript:;" class="page" id="page" data-page="' + page + '">' + parseInt(page+1) + '</a></li>';
           }
 
           if (typeof o.images != 'undefined') {
@@ -71,28 +71,27 @@
             }
           }
 
-          if (typeof o.navigationItem != 'undefined') {
+          if (o.navigationItem != '') {
             if ($(o.currentPage).val() == page)
-              o.navigationHTML += '<a href="javascript:;" class="page active" id="page" data-page="' + page + '">' + o.navigationItem + '</a>';
+              o.navigationHTML += '<li class="active"><a href="javascript:;" class="page active" id="page" data-page="' + page + '">' + o.navigationItem + '</a></li>';
             else
-              o.navigationHTML += '<a href="javascript:;" class="page" id="page" data-page="' + page + '">' + o.navigationItem + '</a>';
+              o.navigationHTML += '<li><a href="javascript:;" class="page" id="page" data-page="' + page + '">' + o.navigationItem + '</a></li>';
           }
 
           page++;
         }
+        o.navigationHTML += o.nextPage;
 
         methods.writePageNumbering(o, pages);
 
-        // append navigation to container
-        if (page > 1)
-          $(o.navigationContainer).html(o.navigationHTML);
-        // end navigation html
+        if (page > 1) $(o.navigationContainer).html(o.navigationHTML);
 
         $(o.navigationContainer).find('.page').each(function(key, val) {
           $(val).on('click', function() {
             methods.goToPage($(this).attr('data-page'), container, o);
 
             methods.changeClass($(this), o);
+            methods.changeClass($(this).parent(), o);
           });
         });
 
@@ -121,7 +120,12 @@
             $(this).attr('class', 'page');
           });
 
+          $(o.navigationContainer).find('li.active').each(function() {
+            $(this).attr('class', '');
+          });
+
           page.attr('class', 'page active');
+          page.parent().attr('class', 'active');
         } else {
           $(o.navigationContainer).find('.page.active').each(function() {
             $(this).attr('class', 'page theImage');
