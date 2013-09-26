@@ -1,32 +1,37 @@
-<script type="text/javascript" src="/js/libs/jquery.js"></script>
-<script type="text/javascript" src="/js/pagination.js"></script>
+<!doctype html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="../pagination.js"></script>
 
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('#container').pagination({
-      itemsPerPage: 2,
-      navigationItem: '',
-      navigationContainer: '.navigationContainer',
-      currentPage: '#currentPage',
-      showPerPage: '#showPerPage'
-      nextPage: '',
-      prevPage: '',
-      images: <?php echo json_encode($theImages) ?>,
-      showPages: false,
-      imgWidth: '50',
-      imgHeight: '50'
-    });
-  });
-</script>
+    <script>
+      $(document).ready(function() {
+        $('#container').pagination({
+          mode: 'bootstrap',
+          itemsPerPage: 2,
+          navigationItem: '',
+          navigationContainer: '.navigationContainer',
+          currentPage: '#currentPage',
+          showPerPage: '#showPerPage',
+          showPages: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <input type="hidden" id="showPerPage" value="0" />
+    <input type="hidden" id="currentPage" value="0" />
 
-<input type="hidden" id="showPerPage" value="0" />
-<input type="hidden" id="currentPage" value="0" />
+    <div id="container">
+      <div class="item">1</div>
+      <div class="item">2</div>
+      <div class="item">3</div>
+      <div class="item">4</div>
+    </div>
 
-<div id="container">
-  <div class="item">1</div>
-  <div class="item">2</div>
-  <div class="item">3</div>
-  <div class="item">4</div>
-</div>
-
-<div class="navigationContainer"></div>
+    <ul class="pagination navigationContainer"></ul>
+  </body>
+</html>
