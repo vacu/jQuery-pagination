@@ -23,23 +23,24 @@ Hidden input element css selector
 ## Usage
 
 ```javascript
-<script type="text/javascript" src="/js/libs/jquery.js"></script>
-<script type="text/javascript" src="/js/pagination.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="../pagination.js"></script>
 
-<script type="text/javascript">
+<script>
   $(document).ready(function() {
     $('#container').pagination({
+      mode: 'bootstrap',
       itemsPerPage: 2,
       navigationItem: '',
       navigationContainer: '.navigationContainer',
       currentPage: '#currentPage',
-      showPerPage: '#showPerPage'
-      nextPage: '',
-      prevPage: '',
-      images: <?php echo json_encode($theImages) ?>,
+      showPerPage: '#showPerPage',
+      prevPage: '<li id="prev"><a href="javascript:;">&laquo;</a></li>',
+      nextPage: '<li id="next"><a href="javascript:;">&raquo;</a></li>',
       showPages: false,
-      imgWidth: '50',
-      imgHeight: '50'
     });
   });
 </script>
@@ -54,5 +55,8 @@ Hidden input element css selector
   <div class="item">4</div>
 </div>
 
-<div class="navigationContainer"></div>
+<ul class="pagination navigationContainer"></div>
 ```
+
+
+MIT
