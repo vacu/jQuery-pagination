@@ -109,13 +109,13 @@
           });
         });
 
-        $(o.nextPage).on('click', function() {
+        $('#' + $(o.nextPage).attr('id')).on('click', function() {
           methods.goNext(container, o, pages);
           $(o.navigationContainer).find('.page').each(function(key, val) { methods.changeClass($(this), o); });
           methods.writePageNumbering(o, pages);
         });
 
-        $(o.prevPage).on('click', function() {
+        $('#' + $(o.prevPage).attr('id')).on('click', function() {
           methods.goPrev(container, o, pages);
           $(o.navigationContainer).find('.page').each(function(key, val) { methods.changeClass($(this), o); });
           methods.writePageNumbering(o, pages);
