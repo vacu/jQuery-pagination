@@ -1,5 +1,7 @@
 (function($) {
   var settings = {
+    mode: 'bootstrap', //or div
+
     itemsPerPage: 1,
     items: 'div.item',
 
@@ -45,7 +47,9 @@
         $(o.currentPage).val(0);
         $(o.showPerPage).val(o.itemsPerPage);
 
-        o.navigationHTML += o.prevPage;
+        if (o.mode == 'bootstrap' || o.mode == '')
+          o.navigationHTML += o.prevPage;
+
         // navigation html
         while (pages > page) {
           if (o.navigationItem == '' && typeof o.images == 'undefined') {
@@ -55,6 +59,7 @@
               o.navigationHTML += '<li><a href="javascript:;" class="page" id="page" data-page="' + page + '">' + parseInt(page+1) + '</a></li>';
           }
 
+          // @TODO: add the bootstrap. li.class here too
           if (typeof o.images != 'undefined') {
             if (o.images.length != 0) {
               if ($(o.currentPage).val() == page) {
@@ -80,7 +85,9 @@
 
           page++;
         }
-        o.navigationHTML += o.nextPage;
+
+        if (o.mode == 'bootstrap' || o.mode == '')
+          o.navigationHTML += o.nextPage;
 
         methods.writePageNumbering(o, pages);
 
@@ -91,7 +98,8 @@
             methods.goToPage($(this).attr('data-page'), container, o);
 
             methods.changeClass($(this), o);
-            methods.changeClass($(this).parent(), o);
+            if (o.mode == 'bootstrap' || o.mode == '')
+              methods.changeClass($(this).parent(), o);
           });
         });
 
@@ -99,6 +107,8 @@
           methods.goNext(container, o, pages);
           $(o.navigationContainer).find('.page').each(function(key, val) {
             methods.changeClass($(this), o);
+            if (o.mode == 'bootstrap' || o.mode == '')
+              methods.changeClass($(this).parent(), o);
           });
           methods.writePageNumbering(o, pages);
         });
@@ -107,6 +117,8 @@
           methods.goPrev(container, o, pages);
           $(o.navigationContainer).find('.page').each(function(key, val) {
             methods.changeClass($(this), o);
+            if (o.mode == 'bootstrap' || o.mode == '')
+              methods.changeClass($(this).parent(), o);
           });
           methods.writePageNumbering(o, pages);
         });
@@ -127,6 +139,7 @@
           page.attr('class', 'page active');
           page.parent().attr('class', 'active');
         } else {
+          // @TODO: add the bootstrap li.class here too
           $(o.navigationContainer).find('.page.active').each(function() {
             $(this).attr('class', 'page theImage');
           });
